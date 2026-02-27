@@ -1,129 +1,78 @@
-# Folkeep
+# Folkeep Resource API
 
-> 🇧🇷 [Leia em Português](./README.pt-BR.md)
+Laravel-based REST API acting as an OAuth 2.0 Resource Server. Responsible for JWT validation, multitenant data isolation, historical employee modeling (SCD Type 2), and analytics-ready reporting. Implements stateless authentication, schema-based tenancy, event logging, and versioned endpoints.
 
-A B2B people analytics platform for managing and analyzing workforce data, focused on headcount, turnover, and organizational distribution reports.
+## System Overview
 
----
+Folkeep is a multitenant system where companies manage their employees and extract strategic HR insights — without the complexity of a full HRIS. The goal is to turn structured people data into actionable reports in a system that uses a fully decoupled architecture, designed with enterprise-grade patterns.
 
-## Overview
+### Tech Stack
 
-A multitenant system where companies manage their employees and extract strategic HR insights — without the complexity of a full HRIS. The goal is to turn structured people data into actionable reports.
+**Frontend**
 
----
+* React + TypeScript — Frontend / SPA
 
-## Stack
+**Backend**
 
-| Layer | Technology |
-|---|---|
-| Backend | Laravel 12+ (REST API) |
-| Frontend | React + TypeScript (decoupled SPA) |
-| Relational Database | PostgreSQL |
-| Logs / Events | MongoDB |
-| Authentication | Laravel Sanctum (stateless token) |
+* Laravel 12+ — Resource Server / REST API
+* Keycloak — Auth Server / OAuth 2.0 / OIDC
+* PostgreSQL — Relational + Historical Database (SCD Type 2)
+* MongoDB — Event Logging & Audit Trail
 
----
+**Containerization**
 
-## Architecture
+* Docker — Service Decoupling
 
-```
-┌─────────────────────┐        HTTP / JSON        ┌──────────────────────┐
-│                     │  ──────────────────────►  │                      │
-│   React + TypeScript│                           │    Laravel API        │
-│   (SPA)             │  ◄──────────────────────  │    (REST)             │
-│                     │                           │                       │
-└─────────────────────┘                           └──────────┬────────────┘
-                                                             │
-                                              ┌──────────────┴──────────────┐
-                                              │                             │
-                                     ┌────────▼────────┐        ┌──────────▼───────┐
-                                     │   PostgreSQL     │        │     MongoDB       │
-                                     │  (relational     │        │  (event logs /    │
-                                     │    data)         │        │   history)        │
-                                     └─────────────────┘        └──────────────────┘
-```
-
-The frontend is an independent project that consumes the API via Sanctum token. There is no coupling via Inertia or Blade — API contracts are the only interface between the two projects.
-
----
-
-## Planned Features
-
-**MVP**
-- Token-based authentication with multitenancy support
-- Employee registration with department, role, contract type, and hire date
-- Employee event history (promotions, role changes, salary updates) stored in MongoDB
-- Headcount report by department
-- Monthly/quarterly turnover report
-- Salary distribution by band and level
-
-**Future Expansions**
-- Real-time notifications (Laravel Reverb)
-- PDF report export
-- Document upload with S3
-- CI/CD with GitHub Actions
-- Diversity and inclusion metrics
-
----
-
-## Key Technical Decisions
-
-**Employee history with Slowly Changing Dimensions**
-Employees change roles, salaries, and departments over time. To enable accurate historical reports, changes are recorded with `valid_from` / `valid_to` columns in PostgreSQL — not just the current state.
-
-**MongoDB for events**
-Every relevant action in the system (hire, promotion, termination, salary change) generates a flexible-schema event document in MongoDB, indexed by `tenant_id`, `employee_id`, and `timestamp`.
-
-**Schema-based multitenancy**
-Each company (tenant) has its own PostgreSQL schema, isolating data without the overhead of separate databases.
-
-**Versioned API**
-All endpoints follow the `/api/v1/` prefix with a standardized response envelope:
-```json
-{
-  "data": {},
-  "meta": {},
-  "errors": []
-}
-```
-
----
-
-## Project Structure
+### Flow & Architecture
 
 ```
-people-analytics/
-├── api/          # Laravel — REST API
-└── web/          # React + TypeScript — SPA
+                        ┌──────┐
+                        │ User │
+                        └──┬───┘
+                           │ 1. Access from web
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│                 Container A                         │
+│                 REACT SPA ─ Frontend                |
+└─────────────────────────────────────────────────────┘
+       ▲ 5. Auth code                        ▲ 
+       │                                     │ 
+       │                                     │
+       ▼ 2. Login redirect                   ▼ . JWT code
+┌────────────────────────┐  ┌───────────────────────────────┐
+│ Container B            │  │ Container C                   │
+│ KEYCLOAK ─ Auth Server |  │ LARAVEL API ─ Resource Server │
+└────────────────────────┘  └───────────────────────────────┘
+          ▲ 4. Credentials                ▲
+          |       ┌───────────────────────┤
+          |       │                       │
+          |       │                       │
+ 3. Query ▼       ▼                       ▼
+     ┌─────────────────┐     ┌─────────────────┐
+     │                 │     │                 │
+     │   PostgreSQL    │     │    MongoDB      │
+     └─────────────────┘     └─────────────────┘
 ```
+
+### Features (MVP)
+
+* OAuth 2.0 authentication
+* Multitenant employee management
+* Historical tracking (SCD)
+* Headcount reports
+* Turnover reports
+* Salary distribution analytics
 
 ---
 
-## Running Locally
+## Structure
 
-> Prerequisites: Docker, Node.js 20+, PHP 8.2+, Composer
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/people-analytics.git
-cd people-analytics
-
-# Backend
-cd api
-cp .env.example .env
-composer install
-php artisan key:generate
-php artisan migrate --seed
-
-# Frontend
-cd ../web
-cp .env.example .env.local
-npm install
-npm run dev
+```
+api/   # Laravel REST API (Resource Server)
+├── 
+└── 
 ```
 
+## Setup
 ---
 
-## Status
-
-🚧 Under development — MVP in progress.
