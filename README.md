@@ -1,5 +1,7 @@
 # Folkeep Resource API
 
+>[Leia em português pt-BR](https://github.com/TacioDaito/folkeep-api/blob/main/README.pt-BR.md)
+
 Laravel-based REST API acting as an OAuth 2.0 Resource Server. Responsible for JWT validation, multitenant data isolation, historical employee modeling (SCD Type 2), and analytics-ready reporting. Implements stateless authentication, schema-based tenancy, event logging, and versioned endpoints.
 
 ## System Overview
