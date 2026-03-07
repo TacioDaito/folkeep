@@ -6,12 +6,11 @@ Folkeep é uma plataforma onde as empresas gerenciam seus funcionários e extrae
 
 **Front-end**
 
-* React + TypeScript — Frontend/SPA
+* React + TypeScript — Frontend SPA
 
 **Back-end**
 
-* Laravel — Servidor de recursos/API REST
-* Keycloak — Servidor de autenticação/OAuth 2.0/OIDC
+* Laravel — Servidor de recursos (API RESTful) / Servidor de autenticação (Laravel Passport, PKCE, OIDC)
 * PostgreSQL — Banco de Dados Relacional + Histórico (SCD Tipo 2)
 * MongoDB – registro de eventos e trilha de auditoria
 
