@@ -28,22 +28,22 @@ Folkeep é uma plataforma onde as empresas gerenciam seus funcionários e extrae
                            ▲ 
                            │
                            ▼ 
-┌─────────────────────────────────────────────────────┐
-│                 Container A                         │
-│                 REACT SPA ─ Frontend                |
-└─────────────────────────────────────────────────────┘
-       ▲                                     ▲ 
-       │                                     │
-       ▼                                     ▼ 
-┌────────────────────────┐  ┌───────────────────────────────┐
-│ Container B            │  │ Container C                   │
-│ KEYCLOAK ─ Auth Server |  │ LARAVEL API ─ Resource Server │
-└────────────────────────┘  └───────────────────────────────┘
-          ▲                               ▲
-          |       ┌───────────────────────┤
-          ▼       ▼                       ▼
+               ┌──────────────────────┐
+               │ Container A          │
+               │ REACT SPA ─ Frontend |
+               └──────────────────────┘
+                           ▲ 
+                           │
+                           ▼ 
+           ┌────────────────────────────────┐
+           │ Container B                    │
+           │ LARAVEL ─ Auth/Resource Server │
+           └────────────────────────────────┘
+                           ▲
+              ┌────────────┴────────────┐
+              ▼                         ▼
   ┌──────────────────────┐  ┌──────────────────────┐
-  │ Container D          │  │ Container E          │
+  │ Container C          │  │ Container D          │
   │ PostgreSQL ─ Main DB │  │ MongoDB ─ Logging DB │
   └──────────────────────┘  └──────────────────────┘
 ```
