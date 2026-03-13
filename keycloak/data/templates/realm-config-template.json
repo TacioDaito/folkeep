@@ -1,0 +1,103 @@
+{
+  "realm": "folkeep",
+  "displayName": "Folkeep",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "clients": [
+    {
+      "clientId": "folkeep-spa",
+      "name": "Folkeep SPA Client",
+      "description": "Public client for the Single Page Application",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "bearerOnly": false,
+      "redirectUris": ["${KEYCLOAK_REDIRECT_URIS}"],
+      "webOrigins": ["${KEYCLOAK_WEB_ORIGINS}"],
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "defaultClientScopes": [
+        "openid",
+        "profile",
+        "email",
+        "roles",
+        "web-origins"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone"
+      ]
+    },
+    {
+      "clientId": "folkeep-api",
+      "name": "Folkeep API Client",
+      "description": "Confidential client for the Laravel backend to validate tokens",
+      "enabled": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "bearerOnly": true,
+      "protocol": "openid-connect",
+      "defaultClientScopes": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "email": "${KEYCLOAK_TEST_USER_EMAIL}",
+      "firstName": "Test",
+      "lastName": "User",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${KEYCLOAK_TEST_USER_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-folkeep"
+      ]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "app-user",
+        "description": "Standard application user"
+      },
+      {
+        "name": "app-admin",
+        "description": "Application administrator"
+      }
+    ]
+  },
+  "defaultRoles": [
+    "app-user"
+  ],
+  "scopeMappings": [],
+  "smtpServer": {},
+  "internationalizationEnabled": false,
+  "supportedLocales": [
+    "en",
+    "pt-BR"
+  ],
+  "defaultLocale": "en"
+}
