@@ -20,8 +20,8 @@
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
       "bearerOnly": false,
-      "redirectUris": ["${KEYCLOAK_REDIRECT_URIS}"],
-      "webOrigins": ["${KEYCLOAK_WEB_ORIGINS}"],
+      "redirectUris": "__REDIRECT_URIS_PLACEHOLDER__",
+      "webOrigins": "__WEB_ORIGINS_PLACEHOLDER__",
       "protocol": "openid-connect",
       "attributes": {
         "pkce.code.challenge.method": "S256"

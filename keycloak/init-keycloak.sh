@@ -16,17 +16,47 @@ WEB_ORIGINS=${KEYCLOAK_WEB_ORIGINS}
 TEST_USER_EMAIL=${KEYCLOAK_TEST_USER_EMAIL}
 TEST_USER_PASSWORD=${KEYCLOAK_TEST_USER_PASSWORD}
 
+# Function to convert comma-separated string to JSON array
+convert_to_json_array() {
+    local input="$1"
+    # Remove surrounding quotes if present
+    input="${input%\"}"
+    input="${input#\"}"
+    
+    # Split by comma and create JSON array
+    IFS=',' read -ra ADDR <<< "$input"
+    json_array="["
+    first=true
+    for uri in "${ADDR[@]}"; do
+        # Trim whitespace
+        uri=$(echo "$uri" | xargs)
+        if [ "$first" = true ]; then
+            json_array="${json_array}\"${uri}\""
+            first=false
+        else
+            json_array="${json_array},\"${uri}\""
+        fi
+    done
+    json_array="${json_array}]"
+    echo "$json_array"
+}
+
+# Convert comma-separated values to JSON arrays
+REDIRECT_URIS_ARRAY=$(convert_to_json_array "$REDIRECT_URIS")
+WEB_ORIGINS_ARRAY=$(convert_to_json_array "$WEB_ORIGINS")
+
 # Escape values for safe sed injection
-REDIRECT_URIS=$(printf '%s\n' "$REDIRECT_URIS" | sed 's/[&/\|]/\\&/g')
-WEB_ORIGINS=$(printf '%s\n' "$WEB_ORIGINS" | sed 's/[&/\|]/\\&/g')
+REDIRECT_URIS_ARRAY=$(printf '%s\n' "$REDIRECT_URIS_ARRAY" | sed 's/[&/\|]/\\&/g')
+WEB_ORIGINS_ARRAY=$(printf '%s\n' "$WEB_ORIGINS_ARRAY" | sed 's/[&/\|]/\\&/g')
 TEST_USER_EMAIL=$(printf '%s\n' "$TEST_USER_EMAIL" | sed 's/[&/\|]/\\&/g')
 TEST_USER_PASSWORD=$(printf '%s\n' "$TEST_USER_PASSWORD" | sed 's/[&/\|]/\\&/g')
 
 # Process the realm template with environment variables
 echo "Processing realm configuration template..."
+# Use a more precise replacement to avoid double quotes
 sed \
-  -e "s|\${KEYCLOAK_REDIRECT_URIS}|${REDIRECT_URIS}|g" \
-  -e "s|\${KEYCLOAK_WEB_ORIGINS}|${WEB_ORIGINS}|g" \
+  -e "s|\"__REDIRECT_URIS_PLACEHOLDER__\"|${REDIRECT_URIS_ARRAY}|g" \
+  -e "s|\"__WEB_ORIGINS_PLACEHOLDER__\"|${WEB_ORIGINS_ARRAY}|g" \
   -e "s|\${KEYCLOAK_TEST_USER_EMAIL}|${TEST_USER_EMAIL}|g" \
   -e "s|\${KEYCLOAK_TEST_USER_PASSWORD}|${TEST_USER_PASSWORD}|g" \
   /opt/keycloak/data/templates/realm-config-template.json \

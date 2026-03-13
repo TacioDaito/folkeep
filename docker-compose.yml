@@ -100,9 +100,9 @@ services:
       - "keycloak.localhost:host-gateway"
     command: npm run dev
 
-  nginx:
+  proxy:
     image: nginx:alpine
-    container_name: nginx
+    container_name: proxy
     ports:
       - "80:80"
     volumes:
