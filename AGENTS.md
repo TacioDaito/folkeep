@@ -1,7 +1,7 @@
 🤖 Folkeep System Instructions
 
 🏗️ Core Architectural Philosophy
-Decoupled First: Always maintain strict separation between the React SPA (Frontend) and the Laravel Resource Server (API).
+Decoupled First: Always maintain strict separation between the Next.js SPA (Frontend) and the Laravel Resource Server (API), with Nginx Reverse Proxy to mediate everything.
 
 Polyglot Persistence:
 
@@ -10,6 +10,10 @@ Use PostgreSQL for relational data and historical tracking (SCD Type 2).
 Use MongoDB exclusively for event logging and audit trails.
 
 Principles: All code must strictly adhere to SOLID, DRY, and KISS principles. Favor readability and maintainability over clever "one-liners."
+
+Easy setup: Everything must work with just docker compose up -d.
+
+Security: Never hardcode keys, codes, passwords or other sensitive info.
 
 🔧 Technical Constraints
 🟢 Backend (Laravel API)

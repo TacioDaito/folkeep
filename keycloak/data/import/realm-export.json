@@ -5,7 +5,6 @@
   "sslRequired": "external",
   "registrationAllowed": false,
   "loginWithEmailAllowed": true,
-  "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": true,
   "editUsernameAllowed": false,
   "bruteForceProtected": true,
@@ -20,16 +19,9 @@
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
-      "redirectUris": [
-        "http://localhost:3000/*",
-        "http://localhost:5173/*",
-        "http://spa.localhost/*"
-      ],
-      "webOrigins": [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://spa.localhost"
-      ],
+      "bearerOnly": false,
+      "redirectUris": ["http://localhost:3000/api/auth/callback/keycloak,http://localhost:5173/api/auth/callback/keycloak,http://spa.localhost/api/auth/callback/keycloak"],
+      "webOrigins": ["http://localhost:3000,http://localhost:5173,http://spa.localhost"],
       "protocol": "openid-connect",
       "attributes": {
         "pkce.code.challenge.method": "S256"
@@ -56,9 +48,8 @@
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": true,
-      "bearerOnly": false,
+      "bearerOnly": true,
       "protocol": "openid-connect",
-      "secret": "change-me-in-production",
       "defaultClientScopes": [
         "openid",
         "profile",
