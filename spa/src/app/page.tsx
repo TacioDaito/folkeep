@@ -20,8 +20,8 @@ export default function Home() {
   return (
     <main>
       <h1>My App</h1>
-      <button onClick={() => signIn("authentik")}>
-        Log in with Authentik
+      <button onClick={() => signIn("keycloak")}>
+        Log in with Keycloak
       </button>
     </main>
   );

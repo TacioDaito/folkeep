@@ -1,8 +1,8 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:26.1.2
+    build: ./auth
     container_name: keycloak
-    command: start --import-realm
+    command: start --import-realm --optimized
     env_file:
       - ./auth/.env
     environment:
@@ -43,7 +43,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql
       - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh:ro
-      - ./init-authentik-db.sh:/docker-entrypoint-initdb.d/init-authentik-db.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -67,7 +66,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    container_name: laravel-api
+    container_name: api
     working_dir: /var/www/html
     env_file:
       - ./api/.env
@@ -92,7 +91,7 @@ services:
     build:
       context: ./spa
       dockerfile: Dockerfile
-    container_name: nextjs-spa
+    container_name: spa
     env_file:
       - ./spa/.env.local
     environment:
