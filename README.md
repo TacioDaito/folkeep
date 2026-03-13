@@ -12,8 +12,7 @@ Folkeep is a plataform where companies manage their employees and extract strate
 
 **Backend**
 
-* Laravel — Resource Server / REST API
-* Keycloak — Auth Server / OAuth 2.0 / OIDC
+* Laravel — Resource Server (RESTful API) / Auth Server (Laravel Passport, PCKE, OIDC)
 * PostgreSQL — Relational + Historical Database (SCD Type 2)
 * MongoDB — Event Logging & Audit Trail
 
@@ -30,22 +29,22 @@ Folkeep is a plataform where companies manage their employees and extract strate
                            ▲ 
                            │
                            ▼ 
-┌─────────────────────────────────────────────────────┐
-│                 Container A                         │
-│                 REACT SPA ─ Frontend                |
-└─────────────────────────────────────────────────────┘
-       ▲                                     ▲ 
-       │                                     │
-       ▼                                     ▼ 
-┌────────────────────────┐  ┌───────────────────────────────┐
-│ Container B            │  │ Container C                   │
-│ KEYCLOAK ─ Auth Server |  │ LARAVEL API ─ Resource Server │
-└────────────────────────┘  └───────────────────────────────┘
-          ▲                               ▲
-          |       ┌───────────────────────┤
-          ▼       ▼                       ▼
+               ┌──────────────────────┐
+               │ Container A          │
+               │ REACT SPA ─ Frontend |
+               └──────────────────────┘
+                           ▲ 
+                           │
+                           ▼ 
+           ┌────────────────────────────────┐
+           │ Container B                    │
+           │ LARAVEL ─ Auth/Resource Server │
+           └────────────────────────────────┘
+                           ▲
+              ┌────────────┴────────────┐
+              ▼                         ▼
   ┌──────────────────────┐  ┌──────────────────────┐
-  │ Container D          │  │ Container E          │
+  │ Container C          │  │ Container D          │
   │ PostgreSQL ─ Main DB │  │ MongoDB ─ Logging DB │
   └──────────────────────┘  └──────────────────────┘
 ```

@@ -10,8 +10,7 @@ Folkeep é uma plataforma onde as empresas gerenciam seus funcionários e extrae
 
 **Back-end**
 
-* Laravel — Servidor de recursos/API REST
-* Keycloak — Servidor de autenticação/OAuth 2.0/OIDC
+* Laravel — Servidor de recursos (API RESTful) / Servidor de autenticação (Laravel Passport, PKCE, OIDC)
 * PostgreSQL — Banco de Dados Relacional + Histórico (SCD Tipo 2)
 * MongoDB – registro de eventos e trilha de auditoria
 
@@ -28,22 +27,22 @@ Folkeep é uma plataforma onde as empresas gerenciam seus funcionários e extrae
                            ▲ 
                            │
                            ▼ 
-┌─────────────────────────────────────────────────────┐
-│                 Container A                         │
-│                 REACT SPA ─ Frontend                |
-└─────────────────────────────────────────────────────┘
-       ▲                                     ▲ 
-       │                                     │
-       ▼                                     ▼ 
-┌────────────────────────┐  ┌───────────────────────────────┐
-│ Container B            │  │ Container C                   │
-│ KEYCLOAK ─ Auth Server |  │ LARAVEL API ─ Resource Server │
-└────────────────────────┘  └───────────────────────────────┘
-          ▲                               ▲
-          |       ┌───────────────────────┤
-          ▼       ▼                       ▼
+               ┌──────────────────────┐
+               │ Container A          │
+               │ REACT SPA ─ Frontend |
+               └──────────────────────┘
+                           ▲ 
+                           │
+                           ▼ 
+           ┌────────────────────────────────┐
+           │ Container B                    │
+           │ LARAVEL ─ Auth/Resource Server │
+           └────────────────────────────────┘
+                           ▲
+              ┌────────────┴────────────┐
+              ▼                         ▼
   ┌──────────────────────┐  ┌──────────────────────┐
-  │ Container D          │  │ Container E          │
+  │ Container C          │  │ Container D          │
   │ PostgreSQL ─ Main DB │  │ MongoDB ─ Logging DB │
   └──────────────────────┘  └──────────────────────┘
 ```
