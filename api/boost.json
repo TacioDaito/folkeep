@@ -4,5 +4,9 @@
     ],
     "herd_mcp": false,
     "mcp": true,
-    "sail": false
+    "nightwatch_mcp": false,
+    "sail": false,
+    "skills": [
+        "pest-testing"
+    ]
 }

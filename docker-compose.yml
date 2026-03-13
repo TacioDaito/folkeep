@@ -1,30 +1,137 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.3
+    image: quay.io/keycloak/keycloak:26.1.2
     container_name: keycloak
-    command: > 
-      start-dev
-      --import-realm
-      --db=postgres
-      --db-url=jdbc:postgresql://host.docker.internal:5432/keycloak
-      --db-username=postgres
-      --db-password=${POSTGRES_PASSWORD:-admin}
+    command: start --import-realm
+    env_file:
+      - ./auth/.env
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN_USER:-admin}
-      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:-admin}
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+      KC_HOSTNAME: keycloak.localhost
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
       KC_HTTP_PORT: 8080
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_LOG_LEVEL: INFO
     ports:
       - "8080:8080"
     volumes:
-      - ./auth-server/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+      - ./auth/keycloak-data:/opt/keycloak/data
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'",
-        ]
-      interval: 10s
+      interval: 30s
+      retries: 10
+      start_period: 60s
+      test: ["CMD-SHELL", 'exec 3<>/dev/tcp/localhost/8080; echo -e "GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3; cat <&3; exec 3>&-;']
+      timeout: 10s
+
+  postgres:
+    image: postgres:18.2
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh:ro
+      - ./init-authentik-db.sh:/docker-entrypoint-initdb.d/init-authentik-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
       timeout: 5s
       retries: 10
+
+  mongodb:
+    image: mongo:8.2
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: laravel-api
+    working_dir: /var/www/html
+    env_file:
+      - ./api/.env
+    environment:
+      DB_HOST: postgres
+      MONGO_HOST: mongodb
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/var/www/html
+      - /var/www/html/vendor
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  spa:
+    build:
+      context: ./spa
+      dockerfile: Dockerfile
+    container_name: nextjs-spa
+    env_file:
+      - ./spa/.env.local
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./spa:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - app-network
+    depends_on:
+      - api
+    extra_hosts:
+      - "keycloak.localhost:host-gateway"
+    command: npm run dev
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - app-network
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      spa:
+        condition: service_started
+      api:
+        condition: service_started
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongo_data:

@@ -8,7 +8,7 @@ Folkeep is a plataform where companies manage their employees and extract strate
 
 **Frontend**
 
-* React + TypeScript — Frontend / SPA
+* Next.js — Frontend / SPA
 
 **Backend**
 

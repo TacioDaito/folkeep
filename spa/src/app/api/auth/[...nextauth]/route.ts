@@ -4,12 +4,12 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 export const authOptions: NextAuthOptions = {
     providers: [
         KeycloakProvider({
-            clientId: process.env.KEYCLOAK_CLIENT_ID!,
-            clientSecret: "",
-            issuer: process.env.KEYCLOAK_ISSUER!,
+            clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID!,
+            clientSecret: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_SECRET!,
+            issuer: `${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/realms/${process.env.NEXT_PUBLIC_KEYCLOAK_REALM}`,
             authorization: {
                 params: {
-                    scope: "openid profile email",
+                    scope: "openid email profile",
                 },
             },
             checks: ["pkce", "state"],
