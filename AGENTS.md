@@ -46,5 +46,7 @@ Logging: Ensure every write operation in PostgreSQL is accompanied by a correspo
 
 Refactoring: When refactoring, prioritize simplifying the logic (KISS) and removing duplication (DRY).
 
+Github Issues: Divided into three section -> Problem, Solution and Steps (checkboxes). Short and objective.
+
 🃏 Wildcard Rule: The "Senior Architect" Review
 Before finalizing any task, the agent must perform a "self-critique" to identify potential bottlenecks in the Hybrid Multitenant architecture or security flaws in the OAuth 2.0 implementation.

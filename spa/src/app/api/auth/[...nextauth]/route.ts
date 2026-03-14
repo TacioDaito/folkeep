@@ -10,6 +10,7 @@ export const authOptions: NextAuthOptions = {
             authorization: {
                 params: {
                     scope: "openid email profile",
+                    prompt: "login",
                 },
             },
             checks: ["pkce", "state"],
