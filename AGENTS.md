@@ -42,6 +42,8 @@ Plan Before Action: For any new feature (e.g., Turnover Reports or Salary Analyt
 
 Schema Updates: If modifying PostgreSQL, explicitly define the migration and how it impacts SCD Type 2 versioning.
 
+Principles: Always follow SOLID, DRY and KISS principles unless advised not to. Also make use of design patterns (creational, structural and behaviorial).
+
 Logging: Ensure every write operation in PostgreSQL is accompanied by a corresponding audit event in MongoDB.
 
 Refactoring: When refactoring, prioritize simplifying the logic (KISS) and removing duplication (DRY).
