@@ -20,6 +20,8 @@ services:
       start_period: 60s
       test: ["CMD-SHELL", 'exec 3<>/dev/tcp/localhost/8080; echo -e "GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3; cat <&3; exec 3>&-;']
       timeout: 10s
+    networks:
+      - app-network
 
   postgres:
     image: postgres:18.2
@@ -36,6 +38,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - app-network
 
   mongodb:
     image: mongo:8.2
@@ -49,6 +53,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - app-network
 
   api:
     build:
@@ -76,6 +82,8 @@ services:
       mongodb:
         condition: service_healthy
     command: php artisan serve --host=0.0.0.0 --port=8000
+    extra_hosts:
+    - 'host.docker.internal:host-gateway'
 
   spa:
     build:
