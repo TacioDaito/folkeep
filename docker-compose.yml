@@ -60,6 +60,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
+    entrypoint: ["/bin/sh", "./docker-entrypoint.sh"]
     container_name: api
     working_dir: /var/www/html
     env_file:
@@ -81,7 +82,6 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_healthy
-    command: php artisan serve --host=0.0.0.0 --port=8000
     extra_hosts:
     - 'host.docker.internal:host-gateway'
 

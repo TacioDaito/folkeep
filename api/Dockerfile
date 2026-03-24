@@ -9,6 +9,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
+USER root
+RUN chmod +x docker-entrypoint.sh
+
 RUN composer install --no-interaction --prefer-dist
 
 EXPOSE 8000
