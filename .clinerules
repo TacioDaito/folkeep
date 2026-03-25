@@ -1,0 +1,21 @@
+# 🧭 Master Project Index & Router
+
+Use shorthand triggers to load specific project rule modules.
+
+### 🧩 Command & Context Mapping
+When I use a trigger, your **FIRST STEP** must be to use the `read_file` tool to load the associated documentation before proceeding with any code changes.
+
+| Trigger | Target File | Scope of Work |
+| :--- | :--- | :--- |
+| **!prd** | `.cline/docs/PRD.md` | Product requirements, features, and MVP goals. |
+| **!arch** | `.cline/docs/architecture.md` | System design, Docker config, and infrastructure. |
+| **!back** | `.cline/docs/backend.md` | API logic, Laravel patterns, and service layer. |
+| **!front** | `.cline/docs/frontend.md` | Next.js SPA, React components, and state. |
+| **!auth** | `.cline/docs/auth.md` | Keycloak, OIDC, PKCE flows, and security protocols. |
+| **!db** | `.cline/docs/databases.md` | PostgresSQL/MongoDB schemas and data modeling. |
+| **!task** | `.cline/docs/tasks.md` | Current sprint, backlog, issues/tasks/cards and "Definition of Done." |
+
+### 🛠 Operational Rules
+1. **Lazy Loading:** Do not attempt to read all sub-files at once. Only load the specific file(s) requested by the trigger.
+2. **Context Persistence:** Once a file is read, assume its rules apply until the end of the current task.
+3. **Cross-Reference:** If a task in `!back` requires authentication, you may proactively ask to read `!auth`.
