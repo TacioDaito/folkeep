@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Services;
+
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 
