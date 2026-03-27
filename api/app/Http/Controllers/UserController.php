@@ -23,7 +23,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         //
     }
@@ -31,7 +31,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(UserRequest $request)
+    public function show()
     {
         return response()->json($this->userService->getUser($request));
     }
