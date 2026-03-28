@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\UserService;
-use App\Http\Requests\UserRequest;
+use Illuminate\Http\Request;
+use App\Contracts\UserServiceInterface;
 
 class UserController extends Controller
 {
     public function __construct(
-        protected UserService $userService
+        protected UserServiceInterface $userService
     ) {}
 
-    public function getUser(UserRequest $request)
+    public function getUser(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($this->userService->getUser($request));
+        return response()->json($this->userService->getUser($request->attributes->get('jwt_payload')?->sub));
     }
 
 }
