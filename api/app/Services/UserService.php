@@ -2,15 +2,13 @@
 
 namespace App\Services;
 
-use App\Http\Requests\UserRequest;
-use App\Contracts\UserContract;
+use App\Contracts\UserServiceInterface;
 use App\Models\User;
 
-class UserService implements UserContract
+class UserService implements UserServiceInterface
 {
-    public function getUser(UserRequest $request)
+    public function getUser(string $sub): User
     {
-        ds(request()->attributes->get('jwt_payload'));
-        return User::where('keycloak_id', request()->attributes->get('jwt_payload')->sub)->firstOrFail();
+        return User::where('keycloak_id', $sub)->firstOrFail();
     }
 }

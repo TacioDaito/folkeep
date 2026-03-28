@@ -33,7 +33,7 @@ class KeycloakTokenValidator
         $keys = $this->jwksCache->getKeys();
 
         // If the kid isn't in cache, do a single refresh in case keys rotated
-        if ($kid && ! isset($keys['kid'])) {
+        if ($kid && ! isset($keys[$kid])) {
             $keys = $this->jwksCache->refresh();
         }
 

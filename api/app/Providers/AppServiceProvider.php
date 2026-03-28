@@ -11,9 +11,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(\App\Services\JwksCache::class);
-        $this->app->singleton(\App\Services\KeycloakTokenValidator::class);
-        $this->app->bind(\App\Contracts\UserContract::class, \App\Services\UserService::class);
+        //
     }
 
     /**
