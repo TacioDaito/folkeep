@@ -31,11 +31,28 @@
         "profile",
         "email",
         "roles",
-        "web-origins"
+        "web-origins",
+        "basic"
       ],
       "optionalClientScopes": [
         "address",
         "phone"
+      ],
+      "protocolMappers": [
+        {
+          "name": "sub",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "id",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "sub",
+            "jsonType.label": "String"
+          }
+        }
       ]
     },
     {
@@ -53,7 +70,8 @@
       "defaultClientScopes": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "basic"
       ]
     }
   ],
