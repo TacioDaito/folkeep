@@ -23,7 +23,7 @@ return [
     // The issuer URL for validating the "iss" claim in JWT tokens
     'issuer'         => env(
         'KEYCLOAK_ISSUER',
-        env('KEYCLOAK_BASE_URL', 'http://localhost:8080')
+        env('KEYCLOAK_PUBLIC_URL', 'http://localhost:8080')
         . '/realms/'
         . env('KEYCLOAK_REALM', 'master')
     ),
