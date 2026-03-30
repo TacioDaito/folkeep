@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\UserServiceInterface;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -13,7 +14,8 @@ class UserController extends Controller
 
     public function getUser(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($this->userService->getUser($request->attributes->get('jwt_payload')?->sub));
+        $user = $this->userService->getUser($request->attributes->get('jwt_payload')?->sub);
+        return $user->toResource()->response();
     }
 
 }
