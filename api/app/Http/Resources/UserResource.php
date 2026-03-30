@@ -21,6 +21,6 @@ class UserResource extends JsonApiResource
      */
     public function toRelationships(Request $request): array
     {
-        return $this->resource->getRelationships();
+        return $this->resource->getRelations();
     }
 }
