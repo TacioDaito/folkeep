@@ -31,11 +31,12 @@ describe('GET /api/user', function () {
     });
 
     it('returns 401 when JWT token is invalid', function () {
-        $validator = $this->mock(KeycloakTokenValidator::class, function ($mock) {
-            $mock->shouldReceive('validate')
-                ->once()
-                ->andThrow(new TokenException('Invalid token'));
-        });
+        $validator = Mockery::mock(KeycloakTokenValidator::class);
+        $validator->shouldReceive('validate')
+            ->once()
+            ->andThrow(new TokenException('Invalid token'));
+
+        app()->instance(KeycloakTokenValidator::class, $validator);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer invalid-token',
@@ -49,7 +50,7 @@ describe('GET /api/user', function () {
     });
 
     it('returns user data when valid JWT token is provided', function () {
-        $keycloakId = 'test-keycloak-id-123';
+        $keycloakId = '88888888-4444-4444-4444-121212121212';
         $user = User::factory()->create([
             'keycloak_id' => $keycloakId,
             'name' => 'John Doe',
@@ -58,11 +59,12 @@ describe('GET /api/user', function () {
 
         $payload = (object) ['sub' => $keycloakId];
 
-        $validator = $this->mock(KeycloakTokenValidator::class, function ($mock) use ($payload) {
-            $mock->shouldReceive('validate')
-                ->once()
-                ->andReturn($payload);
-        });
+        $validator = Mockery::mock(KeycloakTokenValidator::class);
+        $validator->shouldReceive('validate')
+            ->once()
+            ->andReturn($payload);
+
+        app()->instance(KeycloakTokenValidator::class, $validator);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer valid-token',
@@ -79,15 +81,16 @@ describe('GET /api/user', function () {
     });
 
     it('returns 404 when user is not found', function () {
-        $keycloakId = 'non-existent-keycloak-id';
+        $keycloakId = '88888888-4444-4444-4444-121212121212';
 
         $payload = (object) ['sub' => $keycloakId];
 
-        $validator = $this->mock(KeycloakTokenValidator::class, function ($mock) use ($payload) {
-            $mock->shouldReceive('validate')
-                ->once()
-                ->andReturn($payload);
-        });
+        $validator = Mockery::mock(KeycloakTokenValidator::class);
+        $validator->shouldReceive('validate')
+            ->once()
+            ->andReturn($payload);
+
+        app()->instance(KeycloakTokenValidator::class, $validator);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer valid-token',
