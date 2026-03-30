@@ -4,5 +4,5 @@ namespace App\Contracts;
 
 interface UserServiceInterface
 {
-    public function getUser(string $sub): \App\Models\User;
+    public function getUser(string $sub): \Illuminate\Database\Eloquent\Model;
 }

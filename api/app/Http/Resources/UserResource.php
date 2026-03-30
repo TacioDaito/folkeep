@@ -3,20 +3,24 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\JsonApi\JsonApiResource;
+use Illuminate\Http\Request;
 
 class UserResource extends JsonApiResource
 {
-    /**
-     * The resource's attributes.
-     */
-    public $attributes = [
-        // ...
-    ];
 
     /**
-     * The resource's relationships.
+     * Get the resource's attributes.
      */
-    public $relationships = [
-        // ...
-    ];
+    public function toAttributes(Request $request): array
+    {
+        return $this->resource->getAttributes();
+    }
+
+    /**
+     * Get the resource's relationships.
+     */
+    public function toRelationships(Request $request): array
+    {
+        return $this->resource->getRelationships();
+    }
 }
