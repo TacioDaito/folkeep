@@ -16,6 +16,7 @@
         "yadakhov/laradump": "^2.3"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.7",
         "fakerphp/faker": "^1.23",
         "laravel/boost": "^2.3",
         "laravel/pail": "^1.2.2",

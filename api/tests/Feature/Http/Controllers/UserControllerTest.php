@@ -8,6 +8,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 describe('GET /api/user', function () {
+
+    afterEach(fn() => Mockery::close());
+
     it('returns 401 when no Authorization header is provided', function () {
         $response = $this->getJson('/api/user');
 
@@ -18,9 +21,9 @@ describe('GET /api/user', function () {
             ]);
     });
 
-    it('returns 401 when Authorization header is malformed', function () {
+    it('returns 401 when Authorization header is malformed', function ($malformedHeader) {
         $response = $this->withHeaders([
-            'Authorization' => 'InvalidToken',
+            'Authorization' => $malformedHeader,
         ])->getJson('/api/user');
 
         $response->assertStatus(401)
@@ -28,7 +31,8 @@ describe('GET /api/user', function () {
                 'error' => 'Unauthorized',
                 'message' => 'Missing or malformed Authorization header.',
             ]);
-    });
+    })
+    ->with(['Token', 'Bearer', 'Bearer ', '']);
 
     it('returns 401 when JWT token is invalid', function () {
         $validator = Mockery::mock(KeycloakTokenValidator::class);
@@ -71,13 +75,10 @@ describe('GET /api/user', function () {
         ])->getJson('/api/user');
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'type',
-                    'attributes',
-                ],
-            ]);
+            ->assertJsonFragment(['keycloak_id' => $user->keycloak_id])
+            ->assertJsonFragment(['name' => $user->name])
+            ->assertJsonFragment(['email' => $user->email])
+            ->assertJsonPath('$.data.id', (string) $user->id);
     });
 
     it('returns 404 when user is not found', function () {
