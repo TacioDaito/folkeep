@@ -13,7 +13,7 @@ class UserController extends Controller
 
     public function getUser(Request $request): \Illuminate\Http\JsonResponse
     {
-        $user = $this->userService->getUser($request->attributes->get('jwt_payload')?->sub);
+        $user = $this->userService->getUser($request->attributes->get('jwt_payload')?->sub ?? '');
         return $user->toResource()->response();
     }
 
