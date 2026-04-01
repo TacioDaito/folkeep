@@ -1,11 +1,14 @@
 <?php
 
-use App\Services\KeycloakTokenValidator;
 use App\Exceptions\TokenException;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
-
+/**
+* Test suite for the ValidateKeycloakToken middleware, which is responsible for validating JWT tokens on incoming requests.
+* The tests cover scenarios such as missing or malformed Authorization headers, invalid tokens, and successful validation.
+* The MockAuthValidator trait is used to allow the simulation of different validation outcomes without needing to rely
+* on actual token generation. Each test asserts that the middleware returns the appropriate HTTP
+* status codes and error messages based on the validation results.
+*/
 describe('JWT validation middleware', function () {
 
     afterEach(fn() => Mockery::close());
@@ -37,12 +40,7 @@ describe('JWT validation middleware', function () {
     ]);
 
     it('returns 401 when JWT token is invalid', function () {
-        $validator = Mockery::mock(KeycloakTokenValidator::class);
-        $validator->shouldReceive('validate')
-            ->once()
-            ->andThrow(new TokenException('Invalid token'));
-
-        app()->instance(KeycloakTokenValidator::class, $validator);
+        $this->createExceptionThrowingValidator(new TokenException('Invalid token'));
 
         $response = $this->withHeaders(['Authorization' => 'Bearer invalid-token'])->getJson('/api/hello');
 
@@ -51,6 +49,17 @@ describe('JWT validation middleware', function () {
                 'error' => 'Unauthorized',
                 'message' => 'Invalid token',
             ]);
+    });
+
+    it('returns 200 and attaches payload when JWT token is valid', function () {
+        $payload = (object) ['sub' => fake()->uuid()];
+        $this->createValidator($payload);
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer valid-token'])->getJson('/api/hello');
+
+        $response->assertStatus(200);
+
+        $this->assertEquals($payload, request()->attributes->get('jwt_payload'));
     });
 
 });

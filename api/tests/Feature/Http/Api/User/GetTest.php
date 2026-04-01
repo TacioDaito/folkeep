@@ -1,21 +1,14 @@
 <?php
 
 use App\Models\User;
-use App\Services\KeycloakTokenValidator;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
-
-function createValidator($payload): void
-{
-    $validator = Mockery::mock(KeycloakTokenValidator::class);
-    $validator->shouldReceive('validate')
-        ->once()
-        ->andReturn($payload);
-
-    app()->instance(KeycloakTokenValidator::class, $validator);
-}
-
+/**
+* Test suite for the GET /api/user endpoint, which returns the authenticated user's information.
+* This endpoint requires a valid JWT token in the Authorization header and returns user data
+* in JSON API format. The tests cover successful retrieval of user data, handling of not found
+* users, and correct content types for responses. It uses the MockAuthValidator trait to mock
+* the token validation process and simulate different scenarios.
+*/
 describe('GET /api/user', function () {
 
     afterEach(fn() => Mockery::close());
@@ -23,19 +16,26 @@ describe('GET /api/user', function () {
     it('returns user data when valid JWT token is provided', function () {
         $user = User::factory()->create();
 
-        createValidator((object)['sub' => $user->keycloak_id]);
+        $this->createValidator((object)['sub' => $user->keycloak_id]);
 
         $response = $this->withHeaders(['Authorization' => 'Bearer valid-token'])->getJson('/api/user');
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['keycloak_id' => $user->keycloak_id])
-            ->assertJsonFragment(['name' => $user->name])
-            ->assertJsonFragment(['email' => $user->email])
-            ->assertJsonPath('data.id', (string) $user->id);
+            ->assertJson([
+                'data' => [
+                    'type' => 'users',
+                    'id' => (string) $user->id,
+                    'attributes' => [
+                        'keycloak_id' => $user->keycloak_id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                    ],
+                ],
+            ]);
     });
 
     it('returns 404 when user is not found', function () {
-        createValidator((object) ['sub' => fake()->uuid()]);
+        $this->createValidator((object) ['sub' => fake()->uuid()]);
 
         $response = $this->withHeaders(['Authorization' => 'Bearer valid-token'])->getJson('/api/user');
 
@@ -45,7 +45,7 @@ describe('GET /api/user', function () {
     it('returns application/vnd.api+json for successful responses', function () {
         $user = User::factory()->create();
 
-        createValidator((object) ['sub' => $user->keycloak_id]);
+        $this->createValidator((object) ['sub' => $user->keycloak_id]);
 
         $response = $this->withHeaders(['Authorization' => 'Bearer valid-token'])->getJson('/api/user');
 
