@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\MeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 Route::middleware('keycloak.auth')->group(function () {
-    Route::get('/me', [MeController::class, 'show']);
-
-    // Add all other protected routes here
+    Route::get('/hello', fn() => response()->json(['message' => 'Hello!']));
+    Route::get('/user', [UserController::class, 'getUser']);
 });

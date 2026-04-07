@@ -83,7 +83,7 @@ services:
       mongodb:
         condition: service_healthy
     extra_hosts:
-    - 'host.docker.internal:host-gateway'
+    - 'keycloak.localhost:host-gateway'
 
   spa:
     build:
@@ -93,7 +93,7 @@ services:
     env_file:
       - ./spa/.env.local
     environment:
-      NEXT_PUBLIC_API_BASE_URL: http://api:8000
+      NEXT_PUBLIC_API_BASE_URL: http://api.localhost:8000
     ports:
       - "3000:3000"
     volumes:

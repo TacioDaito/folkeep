@@ -4,8 +4,8 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 export const authOptions: NextAuthOptions = {
     providers: [
         KeycloakProvider({
-            clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID!,
-            clientSecret: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_SECRET!,
+            clientId: process.env.KEYCLOAK_CLIENT_ID!,
+            clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
             issuer: `${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/realms/${process.env.NEXT_PUBLIC_KEYCLOAK_REALM}`,
             authorization: {
                 params: {

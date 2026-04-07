@@ -30,11 +30,10 @@ class KeycloakTokenValidator
     {
         $header = $this->decodeHeader($token);
         $kid    = $header->kid ?? null;
-
         $keys = $this->jwksCache->getKeys();
 
         // If the kid isn't in cache, do a single refresh in case keys rotated
-        if ($kid && ! isset($keys['kid'])) {
+        if ($kid && ! isset($keys[$kid])) {
             $keys = $this->jwksCache->refresh();
         }
 
@@ -46,7 +45,7 @@ class KeycloakTokenValidator
             // Reconstruct the JWKS format with kid field included in each key
             $keySet = ['keys' => array_values($keys)];
             $parsedKeys = JWK::parseKeySet($keySet);
-            
+
             $payload = JWT::decode($token, $parsedKeys);
         } catch (ExpiredException $e) {
             throw new TokenException('Token has expired.', 401);
