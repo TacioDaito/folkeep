@@ -14,8 +14,9 @@ use App\Services\KeycloakTokenValidator;
  */
 class ValidateKeycloakToken
 {
-    public function __construct(private KeycloakTokenValidator $validator)
-    {}
+    public function __construct(
+        private KeycloakTokenValidator $validator
+    ) {}
 
     /**
      * Handle an incoming request.

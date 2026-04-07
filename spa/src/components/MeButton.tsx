@@ -13,9 +13,10 @@ export default function MeButton() {
     async function handleClick() {
         setResult(null);
         setError(null);
+        console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL!}/api/user`);
         try {
             const { data } = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL!}/api/me`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL!}/api/user`,
                 { headers: { Authorization: `Bearer ${session?.accessToken}` } }
             );
             setResult(data);

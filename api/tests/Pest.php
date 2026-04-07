@@ -12,7 +12,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -45,3 +45,15 @@ function something()
 {
     // ..
 }
+
+/*
+|--------------------------------------------------------------------------
+| Traits
+|--------------------------------------------------------------------------
+| If you need to use a specific trait in a group of tests, you can specify them here.
+| The "uses()" function allows you to assign traits to test files, so you don't have to import them in every test file.
+| You can also specify the directory where the tests that should use the traits are located.
+|
+*/
+
+uses('Tests\Traits\MockAuthValidator')->in('Feature');
