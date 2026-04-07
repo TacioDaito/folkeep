@@ -1,27 +1,113 @@
-## Folkeep
+# Folkeep
 
-Folkeep é uma plataforma onde as empresas gerenciam seus funcionários e extraem insights estratégicos de RH — sem a complexidade de um HRIS completo. O objetivo é transformar dados estruturados de pessoas em relatórios acionáveis ​​em uma plataforma que usa uma arquitetura totalmente desacoplada, projetada com padrões de nível empresarial.
+[Read in English](https://github.com/TacioDaito/folkeep/blob/main/README.md)
 
-### Stack de Tecnologia
+> Plataforma de gestão de RH para empresas gerenciarem funcionários e extrair insights estratégicos sem a complexidade de um HRIS completo.
 
-**Front-end**
+---
 
-* Next.js — Frontend/SPA
+## Conteúdo
 
-**Back-end**
+- [Stack](#stack)
+- [Estrutura](#estrutura)
+- [Pré-requisitos](#pré-requisitos)
+- [Inicialização](#inicialização)
+- [Testes](#testes)
+- [Arquitetura](#arquitetura)
+- [Recursos](#recursos-mvp)
 
-* Laravel — Servidor de recursos (API RESTful)
-* Keycloak — Servidor de autenticação (OIDC/OAuth 2.0)
-* PostgreSQL — Banco de Dados Relacional + Histórico (SCD Tipo 2)
-* MongoDB – registro de eventos e trilha de auditoria
+---
 
-**Conteinerização**
+### Stack
 
-* Docker — Desacoplamento de serviços
+| Camada | Tecnologia | Versão |
+|---|---|---|
+| Linguagem | PHP | 8.2+ |
+| Runtime | Node.js | 20 |
+| Framework Backend | Laravel | 13 |
+| Framework Frontend | Next.js | 16.1.6 |
+| Banco de Dados | PostgreSQL | 18.2 |
+| Document Store | MongoDB | 8.2 |
+| Servidor de Autenticação | Keycloak | 26.1.2 |
+| Testes | Pest | 4.0 |
+| Conteinerização | Docker | - |
+
+---
+
+### Estrutura
+
+```
+folkeep/
+├── api/                    # API REST Laravel
+│   ├── app/               # Código da aplicação (Controllers, Services, Models)
+│   ├── config/            # Arquivos de configuração
+│   ├── database/          # Migrations, factories, seeders
+│   ├── routes/            # Rotas da API
+│   └── tests/             # Testes Pest/PHPUnit
+├── spa/                    # Frontend SPA Next.js
+│   ├── src/               # Código fonte (componentes, páginas, tipos)
+│   └── public/            # Assets estáticos
+├── keycloak/               # Configuração do servidor de autenticação Keycloak
+├── postgres/               # Scripts de inicialização do PostgreSQL
+├── proxy/                  # Configuração do proxy reverso NGINX
+└── docker-compose.yml      # Orquestração Docker
+```
+
+---
+
+### Pré-requisitos
+
+- [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)
+
+---
+
+### Inicialização
+
+1. Clone o repositório:
+
+```bash
+git clone <repository-url>
+cd folkeep
+```
+
+2. Copie os arquivos de ambiente e preencha os valores necessários:
+
+```bash
+cp api/.env.example api/.env
+cp spa/.env.local.example spa/.env.local
+cp postgres/.env.example postgres/.env
+cp keycloak/.env.example keycloak/.env
+```
+
+3. Inicie todos os serviços:
+
+```bash
+docker compose up -d
+```
+
+4. Acesse a aplicação:
+
+- Frontend: http://spa.localhost
+- API: http://api.localhost
+- Keycloak: http://keycloak.localhost
+
+---
+
+### Testes
+
+```bash
+# Execute os testes da API
+cd api && php artisan test
+
+# Ou usando Pest diretamente
+cd api && ./vendor/bin/pest
+```
+
+---
 
 ### Arquitetura
 
-``` 
+```
                            ┌───────┐
                            │ User  │
                            └───────┘
@@ -49,23 +135,7 @@ Folkeep é uma plataforma onde as empresas gerenciam seus funcionários e extrae
       └──────────────────────┘  └──────────────────────┘
 ```
 
-## Requisitos
-
-- Docker e Docker Compose
-
-## Início Rápido
-
-```bash
-# Clone e inicie todos os serviços
-git clone <repository-url>
-cd folkeep
-docker compose up -d
-
-# Acesse a aplicação
-# Frontend: http://spa.localhost
-# API: http://api.localhost  
-# Keycloak: http://keycloak.localhost
-```
+---
 
 ### Recursos (MVP)
 
