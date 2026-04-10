@@ -2,7 +2,7 @@
     "agents": [
         "copilot"
     ],
-    "herd_mcp": false,
+    "guidelines": true,
     "mcp": true,
     "nightwatch_mcp": false,
     "sail": false,
