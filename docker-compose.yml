@@ -70,6 +70,7 @@ services:
       # These names resolve to the respective containers, allowing the API to communicate with PostgreSQL and MongoDB seamlessly.
       DB_HOST: postgres
       MONGO_HOST: mongodb
+      REDIS_HOST: redis
     ports:
       - "8000:8000"
     volumes:
@@ -125,10 +126,26 @@ services:
       api:
         condition: service_started
 
+  redis:
+    image: redis:8.6
+    ports:
+        - '6379:6379'
+    volumes:
+        - ./redis/data:/data
+    environment:
+        - REDIS_ARGS=--requirepass admin --appendonly yes
+    restart: unless-stopped
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
+  redis-data:
+      driver: local
   postgres_data:
+      driver: local
   mongo_data:
+      driver: local
