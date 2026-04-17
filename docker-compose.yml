@@ -92,7 +92,7 @@ services:
       dockerfile: Dockerfile
     container_name: spa
     env_file:
-      - ./spa/.env.local
+      - ./spa/.env
     environment:
       NEXT_PUBLIC_API_BASE_URL: http://api.localhost:8000
     ports:
