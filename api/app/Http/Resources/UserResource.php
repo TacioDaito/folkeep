@@ -13,7 +13,7 @@ class UserResource extends JsonApiResource
 {
 
     /**
-     * Get the resource's attributes.
+     * Get the resource's attributes..
      */
     public function toAttributes(Request $request): array
     {
