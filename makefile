@@ -21,10 +21,10 @@ bootstrap:
 	fi
 
 up:
-	docker compose up -d
+	docker compose up -d --wait
 
 up-build:
-	docker compose up -d --build --force-recreate
+	docker compose up -d --build --force-recreate --wait
 
 down:
 	docker compose down
