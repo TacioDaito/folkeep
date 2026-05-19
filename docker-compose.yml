@@ -6,6 +6,10 @@ services:
     command: /opt/keycloak/init-keycloak.sh
     env_file:
       - ./keycloak/.env
+    environment:
+      KC_HOSTNAME: "${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
+      KEYCLOAK_REDIRECT_URIS: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}/api/auth/callback/keycloak"
+      KEYCLOAK_WEB_ORIGINS: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}"
     expose:
       - "8080"
     volumes:
@@ -76,6 +80,9 @@ services:
       DB_HOST: postgres
       MONGO_HOST: mongodb
       REDIS_HOST: redis
+      APP_URL: "${SCHEME}${EXTERNAL_API_SLD}.${TOP_LEVEL_DOMAIN}"
+      KEYCLOAK_PUBLIC_URL: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
+      KEYCLOAK_ISSUER: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}/realms/folkeep"
     expose:
       - "8000"
     volumes:
@@ -89,7 +96,7 @@ services:
       mongodb:
         condition: service_healthy
     extra_hosts:
-      - "folkeep.auth.localhost:host-gateway"
+      - "${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}:host-gateway"
 
   spa:
     build:
@@ -98,6 +105,10 @@ services:
     container_name: spa
     env_file:
       - ./spa/.env
+    environment:
+      NEXTAUTH_URL: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}"
+      NEXT_PUBLIC_API_BASE_URL: "${SCHEME}${EXTERNAL_API_SLD}.${TOP_LEVEL_DOMAIN}"
+      NEXT_PUBLIC_KEYCLOAK_URL: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
     expose:
       - "3000"
     volumes:
@@ -109,7 +120,7 @@ services:
     depends_on:
       - api
     extra_hosts:
-      - "folkeep.auth.localhost:host-gateway"
+      - "${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}:host-gateway"
     command: npm run dev
 
   proxy:
