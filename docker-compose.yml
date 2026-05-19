@@ -18,7 +18,11 @@ services:
       interval: 30s
       retries: 10
       start_period: 60s
-      test: ["CMD-SHELL", 'exec 3<>/dev/tcp/localhost/8080; echo -e "GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3; cat <&3; exec 3>&-;']
+      test:
+        [
+          "CMD-SHELL",
+          'exec 3<>/dev/tcp/localhost/8080; echo -e "GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3; cat <&3; exec 3>&-;',
+        ]
       timeout: 10s
     networks:
       - app-network
@@ -26,8 +30,9 @@ services:
   postgres:
     image: postgres:18.2
     container_name: postgres
-    env_file:
-      - ./postgres/.env
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "admin"
     expose:
       - "5432"
     volumes:
@@ -84,7 +89,7 @@ services:
       mongodb:
         condition: service_healthy
     extra_hosts:
-    - 'keycloak.localhost:host-gateway'
+      - "folkeep.auth.localhost:host-gateway"
 
   spa:
     build:
@@ -104,7 +109,7 @@ services:
     depends_on:
       - api
     extra_hosts:
-      - "keycloak.localhost:host-gateway"
+      - "folkeep.auth.localhost:host-gateway"
     command: npm run dev
 
   proxy:
@@ -113,7 +118,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - app-network
     depends_on:
@@ -127,11 +132,11 @@ services:
   redis:
     image: redis:8.6
     expose:
-        - '6379'
+      - "6379"
     volumes:
-        - ./redis/data:/data
+      - ./redis/data:/data
     environment:
-        - REDIS_ARGS=--requirepass admin --appendonly yes
+      - REDIS_ARGS=--requirepass admin --appendonly yes
     restart: unless-stopped
     networks:
       - app-network
@@ -142,8 +147,8 @@ networks:
 
 volumes:
   redis-data:
-      driver: local
+    driver: local
   postgres_data:
-      driver: local
+    driver: local
   mongo_data:
-      driver: local
+    driver: local
