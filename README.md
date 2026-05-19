@@ -20,17 +20,17 @@
 
 ### Stack
 
-| Layer | Technology | Version |
-|---|---|---|
-| Language | PHP | 8.2+ |
-| Runtime | Node.js | 20 |
-| Backend Framework | Laravel | 13 |
-| Frontend Framework | Next.js | 16.1.6 |
-| Database | PostgreSQL | 18.2 |
-| Document Store | MongoDB | 8.2 |
-| Auth Server | Keycloak | 26.1.2 |
-| Testing | Pest | 4.0 |
-| Containerisation | Docker | - |
+| Layer              | Technology | Version |
+| ------------------ | ---------- | ------- |
+| Language           | PHP        | 8.2+    |
+| Runtime            | Node.js    | 20      |
+| Backend Framework  | Laravel    | 13      |
+| Frontend Framework | Next.js    | 16.1.6  |
+| Database           | PostgreSQL | 18.2    |
+| Document Store     | MongoDB    | 8.2     |
+| Auth Server        | Keycloak   | 26.1.2  |
+| Testing            | Pest       | 4.0     |
+| Containerisation   | Docker     | -       |
 
 ---
 
@@ -87,9 +87,9 @@ docker compose up -d
 
 4. Access the application:
 
-- Frontend: http://spa.localhost
-- API: http://api.localhost
-- Keycloak: http://keycloak.localhost
+- Frontend: http://folkeep.app.localhost
+- API: http://folkeep.api.localhost
+- Keycloak: http://folkeep.auth.localhost
 
 ---
 
@@ -111,9 +111,9 @@ cd api && ./vendor/bin/pest
                            ┌───────┐
                            │ User  │
                            └───────┘
-                               ▲ 
+                               ▲
 -------------------------------│---------------------------------
-                               ▼                    
+                               ▼
                  ┌─────────────────────────┐   Docker Service Network
                  │  Container A            │
                  │  NGINX ─ Reverse Proxy  │
@@ -139,9 +139,9 @@ cd api && ./vendor/bin/pest
 
 ### Features (MVP)
 
-* OIDC/OAuth 2.0 authentication (Keycloak)
-* Multitenant database architecture (shared database and schema)
-* Historical tracking (SCD type 2)
-* Headcount reports
-* Turnover reports
-* Salary distribution analytics
+- OIDC/OAuth 2.0 authentication (Keycloak)
+- Multitenant database architecture (shared database and schema)
+- Historical tracking (SCD type 2)
+- Headcount reports
+- Turnover reports
+- Salary distribution analytics
