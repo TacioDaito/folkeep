@@ -140,7 +140,7 @@ cd api && ./vendor/bin/pest
 ### Features (MVP)
 
 * OIDC/OAuth 2.0 authentication (Keycloak)
-* Hybrid multitenant database architecture (shared database and database-per-tenant)
+* Multitenant database architecture (shared database and schema)
 * Historical tracking (SCD type 2)
 * Headcount reports
 * Turnover reports

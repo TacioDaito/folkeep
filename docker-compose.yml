@@ -6,8 +6,8 @@ services:
     command: /opt/keycloak/init-keycloak.sh
     env_file:
       - ./keycloak/.env
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     volumes:
       - ./keycloak/data:/opt/keycloak/data
       - ./keycloak/init-keycloak.sh:/opt/keycloak/init-keycloak.sh:ro
@@ -28,8 +28,8 @@ services:
     container_name: postgres
     env_file:
       - ./postgres/.env
-    ports:
-      - 5432:5432
+    expose:
+      - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql
       - ./postgres/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh:ro
@@ -44,8 +44,8 @@ services:
   mongodb:
     image: mongo:8.2
     container_name: mongodb
-    ports:
-      - 27017:27017
+    expose:
+      - "27017"
     volumes:
       - mongo_data:/data/db
     healthcheck:
@@ -71,8 +71,8 @@ services:
       DB_HOST: postgres
       MONGO_HOST: mongodb
       REDIS_HOST: redis
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - ./api:/var/www/html
       - /var/www/html/vendor
@@ -93,10 +93,8 @@ services:
     container_name: spa
     env_file:
       - ./spa/.env
-    environment:
-      NEXT_PUBLIC_API_BASE_URL: http://api.localhost:8000
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     volumes:
       - ./spa:/app
       - /app/node_modules
@@ -128,8 +126,8 @@ services:
 
   redis:
     image: redis:8.6
-    ports:
-        - '6379:6379'
+    expose:
+        - '6379'
     volumes:
         - ./redis/data:/data
     environment:

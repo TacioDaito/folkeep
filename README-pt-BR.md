@@ -140,7 +140,7 @@ cd api && ./vendor/bin/pest
 ### Recursos (MVP)
 
 * Autenticação OIDC/OAuth 2.0 (Keycloak)
-* Arquitetura híbrida de banco de dados multilocatário (banco de dados compartilhado e banco de dados por locatário)
+* Arquitetura de banco de dados multilocatário (banco de dados e esquemas compartilhados)
 * Acompanhamento histórico (SCD tipo 2)
 * Relatórios de número de funcionários
 * Relatórios de rotatividade
