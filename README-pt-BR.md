@@ -20,17 +20,17 @@
 
 ### Stack
 
-| Camada | Tecnologia | Versão |
-|---|---|---|
-| Linguagem | PHP | 8.2+ |
-| Runtime | Node.js | 20 |
-| Framework Backend | Laravel | 13 |
-| Framework Frontend | Next.js | 16.1.6 |
-| Banco de Dados | PostgreSQL | 18.2 |
-| Document Store | MongoDB | 8.2 |
-| Servidor de Autenticação | Keycloak | 26.1.2 |
-| Testes | Pest | 4.0 |
-| Conteinerização | Docker | - |
+| Camada                   | Tecnologia | Versão |
+| ------------------------ | ---------- | ------ |
+| Linguagem                | PHP        | 8.2+   |
+| Runtime                  | Node.js    | 20     |
+| Framework Backend        | Laravel    | 13     |
+| Framework Frontend       | Next.js    | 16.1.6 |
+| Banco de Dados           | PostgreSQL | 18.2   |
+| Document Store           | MongoDB    | 8.2    |
+| Servidor de Autenticação | Keycloak   | 26.1.2 |
+| Testes                   | Pest       | 4.0    |
+| Conteinerização          | Docker     | -      |
 
 ---
 
@@ -87,9 +87,9 @@ docker compose up -d
 
 4. Acesse a aplicação:
 
-- Frontend: http://spa.localhost
-- API: http://api.localhost
-- Keycloak: http://keycloak.localhost
+- Frontend: http://folkeep.app.localhost
+- API: http://folkeep.api.localhost
+- Keycloak: http://folkeep.auth.localhost
 
 ---
 
@@ -111,9 +111,9 @@ cd api && ./vendor/bin/pest
                            ┌───────┐
                            │ User  │
                            └───────┘
-                               ▲ 
+                               ▲
 -------------------------------│---------------------------------
-                               ▼                    
+                               ▼
                  ┌─────────────────────────┐   Docker Service Network
                  │  Container A            │
                  │  NGINX ─ Reverse Proxy  │
@@ -139,9 +139,9 @@ cd api && ./vendor/bin/pest
 
 ### Recursos (MVP)
 
-* Autenticação OIDC/OAuth 2.0 (Keycloak)
-* Arquitetura de banco de dados multilocatário (banco de dados e esquemas compartilhados)
-* Acompanhamento histórico (SCD tipo 2)
-* Relatórios de número de funcionários
-* Relatórios de rotatividade
-* Análise de distribuição salarial
+- Autenticação OIDC/OAuth 2.0 (Keycloak)
+- Arquitetura de banco de dados multilocatário (banco de dados e esquemas compartilhados)
+- Acompanhamento histórico (SCD tipo 2)
+- Relatórios de número de funcionários
+- Relatórios de rotatividade
+- Análise de distribuição salarial

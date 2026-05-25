@@ -46,17 +46,17 @@ REDIRECT_URIS_ARRAY=$(convert_to_json_array "$REDIRECT_URIS")
 WEB_ORIGINS_ARRAY=$(convert_to_json_array "$WEB_ORIGINS")
 
 # Escape values for safe sed injection
-REDIRECT_URIS_ARRAY=$(printf '%s\n' "$REDIRECT_URIS_ARRAY" | sed 's/[&/\|]/\\&/g')
-WEB_ORIGINS_ARRAY=$(printf '%s\n' "$WEB_ORIGINS_ARRAY" | sed 's/[&/\|]/\\&/g')
-TEST_USER_EMAIL=$(printf '%s\n' "$TEST_USER_EMAIL" | sed 's/[&/\|]/\\&/g')
-TEST_USER_PASSWORD=$(printf '%s\n' "$TEST_USER_PASSWORD" | sed 's/[&/\|]/\\&/g')
+REDIRECT_URIS_ARRAY=$(printf '%s\n' "$REDIRECT_URIS_ARRAY" | sed 's/[&/\\|]/\\&/g')
+WEB_ORIGINS_ARRAY=$(printf '%s\n' "$WEB_ORIGINS_ARRAY" | sed 's/[&/\\|]/\\&/g')
+TEST_USER_EMAIL=$(printf '%s\n' "$TEST_USER_EMAIL" | sed 's/[&/\\|]/\\&/g')
+TEST_USER_PASSWORD=$(printf '%s\n' "$TEST_USER_PASSWORD" | sed 's/[&/\\|]/\\&/g')
 
 # Process the realm template with environment variables
 echo "Processing realm configuration template..."
-# Use a more precise replacement to avoid double quotes
+# Replace unquoted placeholders directly (no surrounding quotes or brackets)
 sed \
-  -e "s|\"__REDIRECT_URIS_PLACEHOLDER__\"|${REDIRECT_URIS_ARRAY}|g" \
-  -e "s|\"__WEB_ORIGINS_PLACEHOLDER__\"|${WEB_ORIGINS_ARRAY}|g" \
+  -e "s|__REDIRECT_URIS_PLACEHOLDER__|${REDIRECT_URIS_ARRAY}|g" \
+  -e "s|__WEB_ORIGINS_PLACEHOLDER__|${WEB_ORIGINS_ARRAY}|g" \
   -e "s|\${KEYCLOAK_TEST_USER_EMAIL}|${TEST_USER_EMAIL}|g" \
   -e "s|\${KEYCLOAK_TEST_USER_PASSWORD}|${TEST_USER_PASSWORD}|g" \
   /opt/keycloak/data/templates/realm-config-template.json \
@@ -78,6 +78,24 @@ else
     exit 1
 fi
 
-# Start Keycloak with the generated configuration
+# Start Keycloak in background
 echo "Starting Keycloak with realm import..."
-exec /opt/keycloak/bin/kc.sh start --import-realm --optimized
+/opt/keycloak/bin/kc.sh start-dev --import-realm &
+
+# Wait until Keycloak is accepting connections
+echo "Waiting for Keycloak to start..."
+until /opt/keycloak/bin/kcadm.sh config credentials \
+  --server http://localhost:8080 \
+  --realm master \
+  --user $KC_BOOTSTRAP_ADMIN_USERNAME \
+  --password $KC_BOOTSTRAP_ADMIN_PASSWORD 2>/dev/null; do
+  echo "Not ready yet, retrying in 5s..."
+  sleep 5
+done
+
+echo "Keycloak is up! Applying user profile..."
+/opt/keycloak/bin/kcadm.sh update realms/folkeep/users/profile \
+  -f /opt/keycloak/data/user-profile.json
+
+echo "Done."
+wait

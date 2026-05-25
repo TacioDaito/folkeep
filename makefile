@@ -1,4 +1,4 @@
-.PHONY: bootstrap up up-build down down-volumes
+.PHONY: bootstrap up build-up down down-volumes builder-prune
 
 bootstrap:
 	@echo "Copying .env.example files..."
@@ -23,7 +23,7 @@ bootstrap:
 up:
 	docker compose up -d --wait
 
-up-build:
+build-up: bootstrap
 	docker compose up -d --build --force-recreate --wait
 
 down:
@@ -34,3 +34,6 @@ down-volumes:
 
 api-test:
 	docker compose exec api php artisan test
+
+builder-prune:
+	docker builder prune -af

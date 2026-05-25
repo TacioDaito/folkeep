@@ -1,4 +1,4 @@
 .env
 data/tmp
 data/transaction-logs
-data/import
+data/import/realm-export.json
