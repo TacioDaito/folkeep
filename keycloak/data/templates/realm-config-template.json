@@ -3,11 +3,16 @@
   "displayName": "Folkeep",
   "enabled": true,
   "sslRequired": "external",
-  "registrationAllowed": false,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "duplicateEmailsAllowed": false,
   "loginWithEmailAllowed": true,
   "resetPasswordAllowed": true,
   "editUsernameAllowed": false,
   "bruteForceProtected": true,
+  "attributes": {
+    "userProfileEnabled": "true"
+  },
   "clients": [
     {
       "clientId": "folkeep-spa",
@@ -20,8 +25,8 @@
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
       "bearerOnly": false,
-      "redirectUris": "__REDIRECT_URIS_PLACEHOLDER__",
-      "webOrigins": "__WEB_ORIGINS_PLACEHOLDER__",
+      "redirectUris": __REDIRECT_URIS_PLACEHOLDER__,
+      "webOrigins": __WEB_ORIGINS_PLACEHOLDER__,
       "protocol": "openid-connect",
       "attributes": {
         "pkce.code.challenge.method": "S256"
@@ -34,10 +39,7 @@
         "web-origins",
         "basic"
       ],
-      "optionalClientScopes": [
-        "address",
-        "phone"
-      ],
+      "optionalClientScopes": ["address", "phone"],
       "protocolMappers": [
         {
           "name": "sub",
@@ -67,20 +69,13 @@
       "serviceAccountsEnabled": true,
       "bearerOnly": true,
       "protocol": "openid-connect",
-      "defaultClientScopes": [
-        "openid",
-        "profile",
-        "email",
-        "basic"
-      ]
+      "defaultClientScopes": ["openid", "profile", "email", "basic"]
     }
   ],
   "users": [
     {
       "username": "testuser",
       "email": "${KEYCLOAK_TEST_USER_EMAIL}",
-      "firstName": "Test",
-      "lastName": "User",
       "enabled": true,
       "emailVerified": true,
       "credentials": [
@@ -90,9 +85,7 @@
           "temporary": false
         }
       ],
-      "realmRoles": [
-        "default-roles-folkeep"
-      ]
+      "realmRoles": ["default-roles-folkeep"]
     }
   ],
   "roles": {
@@ -107,15 +100,10 @@
       }
     ]
   },
-  "defaultRoles": [
-    "app-user"
-  ],
+  "defaultRoles": ["app-user"],
   "scopeMappings": [],
   "smtpServer": {},
   "internationalizationEnabled": false,
-  "supportedLocales": [
-    "en",
-    "pt-BR"
-  ],
+  "supportedLocales": ["en", "pt-BR"],
   "defaultLocale": "en"
 }

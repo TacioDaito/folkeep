@@ -11,4 +11,6 @@ RUN chmod +x /opt/keycloak/init-keycloak.sh
 # Copy realm templates
 COPY /data/templates/ /opt/keycloak/templates/
 
+COPY /data/user-profile.json /opt/keycloak/data/user-profile.json
+
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
