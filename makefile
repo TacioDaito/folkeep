@@ -12,9 +12,9 @@ bootstrap:
 		fi \
 	done
 	@echo "Generating NEXTAUTH_SECRET..."
-	@if [ -f ".env" ]; then \
+	@if [ -f "spa/.env" ]; then \
 		secret=$$(openssl rand -base64 32); \
-		grep -q "NEXTAUTH_SECRET=" .env \
+		grep -q "NEXTAUTH_SECRET=" spa/.env \
 			&& sed -i "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$$secret|" .env \
 			|| echo "NEXTAUTH_SECRET=$$secret" >> .env; \
 		echo "Done."; \
