@@ -2,8 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: [
-    'folkeep.app.localhost',
-    'folkeep.app.localhost:80',
+    process.env.NEXTAUTH_URL!.replace(/^https?:\/\//, ''),
     '192.168.1.100:3000',
   ],
 };

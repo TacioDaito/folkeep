@@ -9,16 +9,16 @@ export default function Home() {
   if (session) {
     return (
       <main>
-        <p>Welco2me, {session.user?.name}</p>
+        <p>Welcome, {session.user?.name}</p>
         <p>Access token: <code>{session.accessToken.slice(0, 20)}…</code></p>
         <button onClick={() => signIn()}>Re-authenticate</button>
         <button onClick={async () => {
           const logoutUrl: string = process.env.NEXT_PUBLIC_KEYCLOAK_URL
-           + "/realms/" + process.env.NEXT_PUBLIC_KEYCLOAK_REALM
-           + "/protocol/openid-connect/logout?redirect_uri="
-           + window.location.origin
-           + "&id_token_hint=" + session.idToken;
-          await signOut({ callbackUrl: logoutUrl});
+            + "/realms/" + process.env.NEXT_PUBLIC_KEYCLOAK_REALM
+            + "/protocol/openid-connect/logout?redirect_uri="
+            + window.location.origin
+            + "&id_token_hint=" + session.idToken;
+          await signOut({ callbackUrl: logoutUrl });
         }}>Logout</button>
         <MeButton />
       </main>
