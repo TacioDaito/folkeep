@@ -9,7 +9,7 @@ services:
       KC_HOSTNAME: "${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
       KEYCLOAK_REDIRECT_URIS: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}/api/auth/callback/keycloak"
       KEYCLOAK_WEB_ORIGINS: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}"
-      KC_DB_PASSWORD: "${KC_DB_PASSWORD}"
+      KC_DB_PASSWORD: "${DB_PASSWORD}"
       KC_BOOTSTRAP_ADMIN_PASSWORD: "${KC_BOOTSTRAP_ADMIN_PASSWORD}"
       KEYCLOAK_TEST_USER_PASSWORD: "${KEYCLOAK_TEST_USER_PASSWORD}"
     expose:
@@ -37,7 +37,7 @@ services:
     image: postgres:18.2
     environment:
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "admin"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
     expose:
       - "5432"
     volumes:
@@ -79,6 +79,7 @@ services:
       REDIS_HOST: redis
       APP_URL: "${SCHEME}${EXTERNAL_API_SLD}.${TOP_LEVEL_DOMAIN}"
       KEYCLOAK_PUBLIC_URL: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
+      KEYCLOAK_JWKS_URL: "${SCHEME}${INTERNAL_AUTH_SLD}/realms/folkeep/protocol/openid-connect/certs"
       KEYCLOAK_ISSUER: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}/realms/folkeep"
       DB_PASSWORD: "${DB_PASSWORD}"
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
