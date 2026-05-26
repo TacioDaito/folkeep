@@ -9,7 +9,7 @@ export default function Home() {
   if (session) {
     return (
       <main>
-        <p>Welcome, {session.user?.name}</p>
+        <p>Welco2me, {session.user?.name}</p>
         <p>Access token: <code>{session.accessToken.slice(0, 20)}…</code></p>
         <button onClick={() => signIn()}>Re-authenticate</button>
         <button onClick={async () => {

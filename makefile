@@ -1,27 +1,10 @@
-.PHONY: bootstrap up build-up down down-volumes builder-prune
-
-bootstrap:
-	@echo "Copying .env.example files..."
-	@find . -name ".env.example" | while read -r file; do \
-		target="$${file%.example}"; \
-		if [ ! -f "$$target" ]; then \
-			cp "$$file" "$$target"; \
-			echo "Created: $$target"; \
-		else \
-			echo "Skipped (already exists): $$target"; \
-		fi \
-	done
-	@echo "Generating NEXTAUTH_SECRET..."
-	@if [ -f "spa/.env" ]; then \
-		secret=$$(openssl rand -base64 32); \
-		grep -q "NEXTAUTH_SECRET=" spa/.env \
-			&& sed -i "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$$secret|" .env \
-			|| echo "NEXTAUTH_SECRET=$$secret" >> .env; \
-		echo "Done."; \
-	fi
+.PHONY: up build-up down down-volumes api-test builder-prune bootstrap
 
 up:
 	docker compose up -d --wait
+
+bootstrap:
+	node bootstrap.mjs
 
 build-up: bootstrap
 	docker compose up -d --build --force-recreate --wait

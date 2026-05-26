@@ -9,6 +9,9 @@ services:
       KC_HOSTNAME: "${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
       KEYCLOAK_REDIRECT_URIS: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}/api/auth/callback/keycloak"
       KEYCLOAK_WEB_ORIGINS: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}"
+      KC_DB_PASSWORD: "${KC_DB_PASSWORD}"
+      KC_BOOTSTRAP_ADMIN_PASSWORD: "${KC_BOOTSTRAP_ADMIN_PASSWORD}"
+      KEYCLOAK_TEST_USER_PASSWORD: "${KEYCLOAK_TEST_USER_PASSWORD}"
     expose:
       - "8080"
     volumes:
@@ -71,14 +74,14 @@ services:
     env_file:
       - ./api/.env
     environment:
-      # Override API URLs to point to the correct services within the Docker network by using service names.
-      # These names resolve to the respective containers, allowing the API to communicate with PostgreSQL and MongoDB seamlessly.
       DB_HOST: postgres
       MONGO_HOST: mongodb
       REDIS_HOST: redis
       APP_URL: "${SCHEME}${EXTERNAL_API_SLD}.${TOP_LEVEL_DOMAIN}"
       KEYCLOAK_PUBLIC_URL: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
       KEYCLOAK_ISSUER: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}/realms/folkeep"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
     expose:
       - "8000"
     volumes:
@@ -101,9 +104,12 @@ services:
     env_file:
       - ./spa/.env
     environment:
+      HOSTNAME: "0.0.0.0"
+      NEXTAUTH_SECRET: "${NEXTAUTH_SECRET}"
       NEXTAUTH_URL: "${SCHEME}${EXTERNAL_SPA_SLD}.${TOP_LEVEL_DOMAIN}"
       NEXT_PUBLIC_API_BASE_URL: "${SCHEME}${EXTERNAL_API_SLD}.${TOP_LEVEL_DOMAIN}"
       NEXT_PUBLIC_KEYCLOAK_URL: "${SCHEME}${EXTERNAL_AUTH_SLD}.${TOP_LEVEL_DOMAIN}"
+      KEYCLOAK_CLIENT_SECRET: "${KEYCLOAK_CLIENT_SECRET}"
     expose:
       - "3000"
     volumes:
