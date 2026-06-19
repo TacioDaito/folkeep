@@ -7,8 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const envPath = resolve(__dirname, '.', '.env');
 
 if (!existsSync(envPath)) {
-  console.log('.env file not found, skipping bootstrap');
-  process.exit(0);
+  writeFileSync(envPath, 'NEXTAUTH_SECRET=\n', 'utf8');
 }
 
 const env = readFileSync(envPath, 'utf8');
