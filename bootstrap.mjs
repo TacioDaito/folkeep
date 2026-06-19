@@ -7,7 +7,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const envPath = resolve(__dirname, '.', '.env');
 
 if (!existsSync(envPath)) {
-  writeFileSync(envPath, 'NEXTAUTH_SECRET=\n', 'utf8');
+  const examplePath = resolve(__dirname, '.', '.env.example');
+  const example = readFileSync(examplePath, 'utf8');
+  writeFileSync(envPath, example, 'utf8');
+  console.log('.env created from .env.example');
 }
 
 const env = readFileSync(envPath, 'utf8');
