@@ -14,11 +14,8 @@ jobs:
       - name: Cloning repository to GitGub Actions VM runner
         uses: actions/checkout@v4
         
-      - name: Bootstrap the systems env vars
-        run: make bootstrap
-        
       - name: Start the containers
-        run: make up
+        run: make build-up
         
       - name: Test the Laravel API
         run: make api-test
