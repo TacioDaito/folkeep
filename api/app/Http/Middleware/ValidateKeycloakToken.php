@@ -37,6 +37,7 @@ class ValidateKeycloakToken
 
         try {
             $payload = $this->validator->validate($token);
+            \Log::debug('Token validated successfully', ['payload' => $payload]);
             $request->attributes->set('jwt_payload', $payload);
         } catch (TokenException $e) {
             return $this->unauthorized($e->getMessage());

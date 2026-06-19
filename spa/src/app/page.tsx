@@ -14,11 +14,11 @@ export default function Home() {
         <button onClick={() => signIn()}>Re-authenticate</button>
         <button onClick={async () => {
           const logoutUrl: string = process.env.NEXT_PUBLIC_KEYCLOAK_URL
-           + "/realms/" + process.env.NEXT_PUBLIC_KEYCLOAK_REALM
-           + "/protocol/openid-connect/logout?redirect_uri="
-           + window.location.origin
-           + "&id_token_hint=" + session.idToken;
-          await signOut({ callbackUrl: logoutUrl});
+            + "/realms/" + process.env.NEXT_PUBLIC_KEYCLOAK_REALM
+            + "/protocol/openid-connect/logout?redirect_uri="
+            + window.location.origin
+            + "&id_token_hint=" + session.idToken;
+          await signOut({ callbackUrl: logoutUrl });
         }}>Logout</button>
         <MeButton />
       </main>
